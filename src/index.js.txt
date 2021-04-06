@@ -1,0 +1,21 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './login.css'
+
+const App = () =>{
+    return(
+    <div>
+        <h1>Welcome to Coder Network, a social media for coders</h1>
+        <div id="login-box">
+            <div className="box-header">
+                <p>Login</p>
+            </div>
+        </div>
+    </div>
+    )
+};
+
+
+ReactDOM.render(
+    App(), document.getElementById('root')
+);
