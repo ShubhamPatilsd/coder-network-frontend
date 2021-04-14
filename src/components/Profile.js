@@ -22,8 +22,8 @@ const preventDefault = (event) => event.preventDefault();
 const useStyles = makeStyles((theme) => ({
     
     large: {
-      width: theme.spacing(15),
-      height: theme.spacing(15),
+      width: theme.spacing(30),
+      height: theme.spacing(30),
     }
   }));
 
@@ -43,7 +43,9 @@ function Profile(props) {
   const [bio, setBio] = useState();
   const [dateCreated, setDateCreated] = useState();
 
-  
+  useEffect(()=>{
+    document.body.style = 'background: rgb(240,242,245);';
+});
      
       
       
@@ -78,23 +80,33 @@ function Profile(props) {
       return errID ? <ProfileError/> : <Box style={{'textAlign':'center'}}>
       <Typography variant="h2">{username+"'s profile"}</Typography>
        
+      
 
        <Box style={{'display':'flex','justifyContent':'center', 'marginTop':'2rem'}}>
-            <Avatar alt={username} src={`https://avatars.githubusercontent.com/u/${user_id}?v=4.png`} className={classes.large} />
+            
+            <Avatar alt={username} style={{'border':'1px solid #e1e4e8'}} src={`https://avatars.githubusercontent.com/u/${user_id}?v=4.png`} className={classes.large} />
             
        </Box>
 
        <Box textAlign="center">
-            <Typography variant="h6"><Link href={`https://github.com/${username}`} onClick={preventDefault}>{"@"+username}</Link></Typography>
-            {bio ? <Typography variant="h5" style={{'color':'grey'}}>{bio}</Typography>: undefined}
+            <Typography variant="h6">View <Link href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" >{"@"+username}</Link> on GitHub</Typography>
+            
+
+
+            
+
+
+
+
+            {bio ? <Typography variant="h5" style={{'color':'#4b4848', 'width':'100%', 'maxWidth':'1000px' , 'margin':'auto'}}>{bio}</Typography>: undefined}
             <Box style={{'display':'inline-flex', 'marginTop':'1rem'}}>
-                <Typography variant="h6" style={{'display':'flex','marginRight':"0.5rem",  'alignItems':'center'}}>{<PeopleOutlineIcon style={{'marginRight':'0.5rem'}}/>}Followers: {followers}</Typography>
-                <Typography variant="h6" style={{'marginRight':"0.5rem"}}>•</Typography>
-                <Typography variant="h6">Following: {following}</Typography>
+                <Typography style={{'display':'flex','marginRight':"0.5rem", 'whiteSpace':'nowrap'}}>{<PeopleOutlineIcon style={{'marginRight':'0.5rem'}}/>}Followers: {followers}</Typography>
+                <Typography style={{'marginRight':"0.5rem"}}>•</Typography>
+                <Typography style={{'whiteSpace':'nowrap'}}>Following: {following}</Typography>
             </Box>
 
             <Box>
-                <Typography variant="h6" style={{'display':'inline-flex', 'alignItems':'center'}}>{<EventNoteIcon style={{'marginRight':'0.5rem'}}/>}Joined on {extractDate(dateCreated)}</Typography>
+                <Typography style={{'display':'inline-flex'}}>{<EventNoteIcon style={{'marginRight':'0.5rem'}}/>}Joined on {extractDate(dateCreated)}</Typography>
             </Box>
             
        </Box>

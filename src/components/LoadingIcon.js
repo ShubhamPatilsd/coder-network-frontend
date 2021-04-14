@@ -1,4 +1,4 @@
-import '../css/LoadingIcon.css'
+
 
 
 function LoadingIcon(){

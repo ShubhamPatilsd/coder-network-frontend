@@ -8,8 +8,10 @@ import Main from './components/Main';
 import Profile from './components/Profile';
 //import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
 
+
+ReactDOM.render(
+        
 
   <Router>
 <Switch>

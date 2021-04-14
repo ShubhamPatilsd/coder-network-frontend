@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Cookies from 'js-cookie'
 
 import {Redirect} from 'react-router-dom';
@@ -17,6 +17,9 @@ import githubLogin from '../service/auth';
 function Login() {
     
     const [redirect, setRedirect] = useState(false);
+    useEffect(()=>{
+        document.body.style = 'background: rgb(240,242,245);';
+    });
     const loginAsync = async () =>{
         const res = await githubLogin();
         console.log(res);
@@ -45,7 +48,8 @@ try{
 if(redirect){
     return <Redirect to='/'  />
 }else{
-    document.body.style = 'background: rgb(240,242,245);';
+    
+    
     return <div style={{'text-align': 'center'}}>
   
   <Fade bottom>
