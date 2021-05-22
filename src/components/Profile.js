@@ -52,6 +52,9 @@ function Profile(props) {
       const getInfo= async ()=>{
         try{
             const response = await axios.get(`https://api.github.com/users/${props.match.params.user}`, auth_header)
+            /*const check = axios.post("/get/user", { 	headers: { "id": response.data.id } }).then(data=>{
+                
+            })*/
             setUserID(response.data.id);
             setFollowers(response.data.followers);
             setFollowing(response.data.following);

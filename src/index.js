@@ -6,24 +6,27 @@ import ReactDOM from 'react-dom';
 import Login from './components/Login';
 import Main from './components/Main';
 import Profile from './components/Profile';
+import Post from './components/Post';
 //import reportWebVitals from './reportWebVitals';
+
 
 
 
 ReactDOM.render(
         
-
-  <Router>
-<Switch>
-  <Route path="/login" component={Login}/>
+    <Router>
+  <Switch>
+  <Route path="/login" exact component={Login}/>
   
   <Route path="/profile/:user" component={Profile}/>
     
-  <Route path="/" component={Main}/>
-    
+  <Route path="/" exact component={Main}/>
+  <Route path="/post" exact component={Post}/>
+  
   
   </Switch>
   </Router>
+
   ,
   document.getElementById('root')
 );

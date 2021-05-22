@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Cookies from 'js-cookie'
-
+import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
@@ -10,6 +10,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import Fade from 'react-reveal/Fade';
 import Box from '@material-ui/core/Box';
 import githubLogin from '../service/auth';
+
 
 
 
@@ -31,6 +32,10 @@ function Login() {
             accessToken: res.credential.accessToken
 
         }, {expires: 29})
+
+        axios.post("/new/user", { 	headers: { "id": res.additionalUserInfo.profile.id } })
+        //axios.get("/d").then(data=>{console.log(data)});
+
         setRedirect(true);
         //setCookie('auth_data', "res", { path: '/' , SameSite:'Strict'});
         
