@@ -2,32 +2,31 @@ import React, {useState} from "react";
 import Cookies from 'js-cookie'
 import {Redirect} from 'react-router-dom';
 import axios from 'axios';
+import auth_state from '../service/auth_state'
 
 
 
 
 function Main() {
-  const [user_id, setUserID] = useState();
-  if(!Cookies.get('userInfo')){
+  
+  if(!Cookies.get("userInfo")){
+      
     return <Redirect to='/login'  />
   }else{
       
       
-      const userData = JSON.parse(Cookies.get('userInfo'));
+      const userData = JSON.parse(Cookies.get("userInfo"))
       
-      /*const getId= async ()=>{
-        const response = await axios.get(`https://api.github.com/users/${userData.username}`)
-        setUserID(response.data.id);
-      }*/
-      
-      //getId();
-      //<p>{user_id}</p>
+    
 
       return <div>
       <h1>React cookies</h1>
-       <p>{userData.id}</p>
        
-       <img src={userData.pfp} alt="test" height='50px' width='50px'/>
+       <p>{userData.jwt_id}</p>
+       
+       
+       <img src={userData.pfp} alt={userData.username} height='50px' width='50px'/>
+       
 
       
        

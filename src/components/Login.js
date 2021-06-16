@@ -22,33 +22,42 @@ function Login() {
         document.body.style = 'background: rgb(240,242,245);';
     });
     const loginAsync = async () =>{
+        
         const res = await githubLogin();
-        console.log(res);
+        
         //redirect them to /
         //username: res.additionalUserInfo.username,
-        Cookies.set('userInfo', {
-            id: res.additionalUserInfo.profile.id,
-            pfp: (res.additionalUserInfo.profile.avatar_url).toString()+'.png',
-            accessToken: res.credential.accessToken
+        // Cookies.set('userInfo', {
+        //     id: res.additionalUserInfo.profile.id,
+        //     pfp: (res.additionalUserInfo.profile.avatar_url).toString()+'.png',
+        //     accessToken: res.credential.accessToken
 
+        // }, {expires: 29})
+
+        
+        console.log(res)
+        const jwtted_id=await axios.post("/jwt_auth", { 	headers: { "id": res.additionalUserInfo.profile.id } })
+        console.log(jwtted_id)
+        axios.post("/new/user", { 	headers: { "id": jwtted_id } })
+        
+        //accessToken: res.credential.accessToken
+        Cookies.set('userInfo', {
+            jwt_id: jwtted_id.data,
+            pfp: (res.additionalUserInfo.profile.avatar_url).toString()+'.png',
+            username: res.additionalUserInfo.profile.login
+                
+        
         }, {expires: 29})
 
-        axios.post("/new/user", { 	headers: { "id": res.additionalUserInfo.profile.id } })
-        //axios.get("/d").then(data=>{console.log(data)});
-
-        setRedirect(true);
+        setRedirect(true)
+        
+        
         //setCookie('auth_data', "res", { path: '/' , SameSite:'Strict'});
         
             
         
         
     }
-try{
-    JSON.parse(Cookies.get('userInfo'));
-    return <Redirect to='/'  />
-}catch (error){
-    
-}
 
 if(redirect){
     return <Redirect to='/'  />
