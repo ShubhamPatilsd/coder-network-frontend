@@ -1,18 +1,9 @@
-import firebase from '../config/firebase-config';
+import firebase from "../config/firebase-config";
 
+const githubLogin = () => {
+  const githubProvider = new firebase.auth.GithubAuthProvider();
 
-
-const githubLogin=() =>{
-    
-    const githubProvider = new firebase.auth.GithubAuthProvider();
-    return firebase.auth().signInWithPopup(githubProvider).then((res)=>{
-        
-        return res;
-    }).catch((er)=>{
-        return er;
-    })
-    
-    
+  firebase.auth().signInWithRedirect(githubProvider);
 };
 
 export default githubLogin;

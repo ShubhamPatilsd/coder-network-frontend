@@ -1,34 +1,34 @@
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import ReactDOM from "react-dom";
 
-import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import ReactDOM from 'react-dom';
-
-import Login from './components/Login';
-import Main from './components/Main';
-import Profile from './components/Profile';
-import Post from './components/Post';
+import Login from "./components/Login";
+import Main from "./components/Main";
+import Profile from "./components/Profile";
+import Post from "./components/Post";
 //import reportWebVitals from './reportWebVitals';
 
-
-
-
 ReactDOM.render(
-        
-    <Router>
-  <Switch>
-  <Route path="/login" exact component={Login}/>
-  
-  <Route path="/profile/:user" component={Profile}/>
-    
-  <Route path="/" exact component={Main}/>
-  <Route path="/post" exact component={Post}/>
-  
-  
-  </Switch>
-  </Router>
+  <Router>
+    <Switch>
+      <Route path="/login" exact>
+        <Login />
+      </Route>
 
-  ,
-  document.getElementById('root')
+      <Route path="/profile/:user" exact>
+        <Profile />
+      </Route>
+
+      <Route path="/" exact>
+        <Main />
+      </Route>
+      <Route path="/post" exact>
+        <Post />
+      </Route>
+    </Switch>
+  </Router>,
+
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
