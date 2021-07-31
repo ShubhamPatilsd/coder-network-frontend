@@ -3,9 +3,31 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { Typography, Box, Avatar, Link } from "@material-ui/core";
 import Navbar from "./Navbar";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import jwt from "jsonwebtoken";
 
 function Main() {
+  const components = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={materialDark}
+          language={match[1]}
+          PreTag="div"
+          children={String(children).replace(/\n$/, "")}
+          {...props}
+        />
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+  };
+
   const [posts, setPosts] = useState([]);
   const [userData, setUserData] = useState({});
 
@@ -47,7 +69,13 @@ function Main() {
               borderRadius={8}
               style={{ padding: "2rem" }}
             >
-              <Box style={{ display: "flex", alignItems: "center" }}>
+              <Box
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "1rem",
+                }}
+              >
                 <Link
                   href={`/profile/${post.username}`}
                   style={{
@@ -65,7 +93,16 @@ function Main() {
                 </Link>
                 <Typography>Posted by {post.username}</Typography>
               </Box>
-              <Typography style={{ marginTop: "1rem" }}>{post.body}</Typography>
+              <Typography>
+                <ReactMarkdown
+                  style={{ marginTop: "1rem" }}
+                  disallowedElements={["h1", "h2", "h3", "h4", "h5", "h6"]}
+                  unwrapDisallowed
+                  components={components}
+                >
+                  {post.body}
+                </ReactMarkdown>
+              </Typography>
               <Typography variant="overline">
                 Posted on {new Date(post.date).toLocaleDateString()} at{" "}
                 {new Date(post.date).toLocaleTimeString()}

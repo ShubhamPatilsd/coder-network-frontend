@@ -16,6 +16,7 @@ import ProfileError from "./ProfileError";
 import Loading from "./Loading";
 
 import extractDate from "../service/iso_converter";
+import { useParams } from "react-router-dom";
 
 const preventDefault = (event) => event.preventDefault();
 const useStyles = makeStyles((theme) => ({
@@ -35,31 +36,22 @@ function Profile(props) {
   const [loading, setLoading] = useState(true);
   const [bio, setBio] = useState();
   const [dateCreated, setDateCreated] = useState();
+  const { user } = useParams();
 
   useEffect(async () => {
     try {
       const response = await axios.get(
-        `https://api.github.com/users/${props.match.params.user}`,
+        `https://api.github.com/users/${user}`,
         auth_header
       );
-      await axios.post(`/get/user`, {
+      console.log(response);
+      const exists = await axios.post(`/get/user`, {
         headers: { id: response.data.id },
       });
-    } catch (err) {
-      setErrID(true);
-      setLoading(false);
-    }
-  }, []);
-
-  const getInfo = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/users/${props.match.params.user}`,
-        auth_header
-      );
-      /*const check = axios.post("/get/user", { 	headers: { "id": response.data.id } }).then(data=>{
-                
-            })*/
+      console.log(exists);
+      if (exists === {}) {
+        throw new Error();
+      }
 
       setUserID(response.data.id);
       setFollowers(response.data.followers);
@@ -69,16 +61,37 @@ function Profile(props) {
       setDateCreated(response.data.created_at);
 
       setLoading(false);
-    } catch (error) {
+    } catch (err) {
       setErrID(true);
       setLoading(false);
     }
-  };
+  }, []);
+
+  // const getInfo = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://api.github.com/users/${props.match.params.user}`,
+  //       auth_header
+  //     );
+
+  //     setUserID(response.data.id);
+  //     setFollowers(response.data.followers);
+  //     setFollowing(response.data.following);
+  //     setUsername(response.data.login);
+  //     setBio(response.data.bio);
+  //     setDateCreated(response.data.created_at);
+
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setErrID(true);
+  //     setLoading(false);
+  //   }
+  // };
 
   //<p>{user_id}</p>
   //<img src={userData.pfp} alt="test" height='50px' width='50px'/>
 
-  getInfo();
+  // getInfo();
   if (loading) {
     return (
       <Box>
