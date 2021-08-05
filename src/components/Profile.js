@@ -5,7 +5,12 @@ import auth_header from "../config/axios-auth";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createMuiTheme,
+  responsiveFontSizes,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
 import Navbar from "../components/Navbar";
@@ -18,13 +23,17 @@ import Loading from "./Loading";
 import extractDate from "../service/iso_converter";
 import { useParams } from "react-router-dom";
 
-const preventDefault = (event) => event.preventDefault();
+import PostCard from "./PostCard";
+
 const useStyles = makeStyles((theme) => ({
   large: {
     width: theme.spacing(30),
     height: theme.spacing(30),
   },
 }));
+
+let theme = createMuiTheme();
+theme = responsiveFontSizes(theme);
 
 function Profile(props) {
   const [errID, setErrID] = useState(false);
@@ -35,6 +44,7 @@ function Profile(props) {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(true);
   const [bio, setBio] = useState();
+  const [userPosts, setUserPosts] = useState([]);
   const [dateCreated, setDateCreated] = useState();
   const { user } = useParams();
 
@@ -44,7 +54,6 @@ function Profile(props) {
         `https://api.github.com/users/${user}`,
         auth_header
       );
-      console.log(response);
       const exists = await axios.post(`/get/user`, {
         headers: { id: response.data.id },
       });
@@ -53,12 +62,15 @@ function Profile(props) {
         throw new Error();
       }
 
+      const posts = await axios.get(`/user/${response.data.login}/posts`);
+
       setUserID(response.data.id);
       setFollowers(response.data.followers);
       setFollowing(response.data.following);
       setUsername(response.data.login);
       setBio(response.data.bio);
       setDateCreated(response.data.created_at);
+      setUserPosts(posts.data);
 
       setLoading(false);
     } catch (err) {
@@ -67,31 +79,6 @@ function Profile(props) {
     }
   }, []);
 
-  // const getInfo = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://api.github.com/users/${props.match.params.user}`,
-  //       auth_header
-  //     );
-
-  //     setUserID(response.data.id);
-  //     setFollowers(response.data.followers);
-  //     setFollowing(response.data.following);
-  //     setUsername(response.data.login);
-  //     setBio(response.data.bio);
-  //     setDateCreated(response.data.created_at);
-
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setErrID(true);
-  //     setLoading(false);
-  //   }
-  // };
-
-  //<p>{user_id}</p>
-  //<img src={userData.pfp} alt="test" height='50px' width='50px'/>
-
-  // getInfo();
   if (loading) {
     return (
       <Box>
@@ -108,70 +95,84 @@ function Profile(props) {
   ) : (
     <Box>
       <Navbar />
-      <Box style={{ textAlign: "center" }}>
-        <Typography variant="h2">{username + "'s profile"}</Typography>
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "2rem",
-          }}
-        >
-          <Avatar
-            alt={username}
-            style={{ border: "1px solid #e1e4e8" }}
-            src={`https://avatars.githubusercontent.com/u/${user_id}?v=4.png`}
-            className={classes.large}
-          />
-        </Box>
-        <Box textAlign="center">
-          <Typography variant="h6">
-            View{" "}
-            <Link
-              href={`https://github.com/${username}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {"@" + username}
-            </Link>{" "}
-            on GitHub
-          </Typography>
-          {bio ? (
-            <Typography
-              variant="h5"
-              style={{
-                color: "#4b4848",
-                width: "100%",
-                maxWidth: "1000px",
-                margin: "auto",
-              }}
-            >
-              {bio}
-            </Typography>
-          ) : undefined}
-          <Box style={{ display: "inline-flex", marginTop: "1rem" }}>
-            <Typography
-              style={{
-                display: "flex",
-                marginRight: "0.5rem",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {<PeopleOutlineIcon style={{ marginRight: "0.5rem" }} />}
-              Followers: {followers}
-            </Typography>
-            <Typography style={{ marginRight: "0.5rem" }}>•</Typography>
-            <Typography style={{ whiteSpace: "nowrap" }}>
-              Following: {following}
-            </Typography>
+      <Box>
+        <Box style={{ textAlign: "center" }}>
+          <ThemeProvider theme={theme}>
+            <Typography variant="h2">{username + "'s profile"}</Typography>
+          </ThemeProvider>
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "2rem",
+            }}
+          >
+            <Avatar
+              alt={username}
+              style={{ border: "1px solid #e1e4e8" }}
+              src={`https://avatars.githubusercontent.com/u/${user_id}?v=4.png`}
+              className={classes.large}
+            />
           </Box>
-          <Box>
-            <Typography style={{ display: "inline-flex" }}>
-              {<EventNoteIcon style={{ marginRight: "0.5rem" }} />}Joined on{" "}
-              {extractDate(dateCreated)}
+          <Box textAlign="center">
+            <Typography variant="h6">
+              View{" "}
+              <Link
+                href={`https://github.com/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {"@" + username}
+              </Link>{" "}
+              on GitHub
             </Typography>
+            {bio ? (
+              <Typography
+                variant="h5"
+                style={{
+                  color: "#4b4848",
+                  width: "100%",
+                  maxWidth: "1000px",
+                  margin: "auto",
+                }}
+              >
+                {bio}
+              </Typography>
+            ) : undefined}
+            <Box style={{ display: "inline-flex", marginTop: "1rem" }}>
+              <Typography
+                style={{
+                  display: "flex",
+                  marginRight: "0.5rem",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {<PeopleOutlineIcon style={{ marginRight: "0.5rem" }} />}
+                Followers: {followers}
+              </Typography>
+              <Typography style={{ marginRight: "0.5rem" }}>•</Typography>
+              <Typography style={{ whiteSpace: "nowrap" }}>
+                Following: {following}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography style={{ display: "inline-flex" }}>
+                {<EventNoteIcon style={{ marginRight: "0.5rem" }} />}Joined on{" "}
+                {extractDate(dateCreated)}
+              </Typography>
+            </Box>
           </Box>
         </Box>
+        {userPosts.map((post, i) => {
+          return (
+            <PostCard
+              username={post.username}
+              poster_id={post.poster_id}
+              body={post.body}
+              date={post.date}
+            />
+          );
+        })}
       </Box>
     </Box>
   );

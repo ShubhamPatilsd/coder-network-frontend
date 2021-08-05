@@ -20,35 +20,17 @@ function Login() {
   const [redirectData, setRedirectData] = useState();
 
   useEffect(async () => {
-    await firebase
+    firebase
       .auth()
       .getRedirectResult()
       .then((result) => {
-        //console.log(result);
-
+        console.log(result);
         setRedirectData(result);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
-
-  const loginAsync = async () => {
-    await githubLogin();
-
-    // const res2 = GetResults();
-    // console.log(res2);
-
-    //redirect them to /
-    //username: res.additionalUserInfo.username,
-    // Cookies.set('userInfo', {
-    //     id: res.additionalUserInfo.profile.id,
-    //     pfp: (res.additionalUserInfo.profile.avatar_url).toString()+'.png',
-    //     accessToken: res.credential.accessToken
-
-    // }, {expires: 29})
-
-    // console.log(res);
-
-    //setCookie('auth_data', "res", { path: '/' , SameSite:'Strict'});
-  };
 
   (async () => {
     if (redirectData && redirectData.user) {
@@ -63,18 +45,13 @@ function Login() {
           },
         },
       });
-      const jwtted_id = await axios.post("/jwt_auth", {
-        headers: { data: redirectData.additionalUserInfo.profile.id },
-      });
+
       console.log(jwtted_data);
-      axios.post("/new/user", { headers: { id: jwtted_id } });
-      //accessToken: res.credential.accessToken
+      axios.post("/new/user", { headers: { id: jwtted_data } });
       Cookies.set("userInfo", jwtted_data, { expires: 29 });
       setRedirect(true);
     }
   })();
-
-  // console.log(res);
 
   if (redirect) {
     return <Redirect to="/" />;
@@ -138,7 +115,9 @@ function Login() {
             </Box>
 
             <Button
-              onClick={loginAsync}
+              onClick={async () => {
+                await githubLogin();
+              }}
               style={{}}
               variant="contained"
               startIcon={<LockOpenIcon />}

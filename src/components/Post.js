@@ -112,10 +112,15 @@ function Post() {
               </Button>
             </Box>
           </Box>
-          <Box style={{ display: "flex", justifyContent: "center" }}>
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <Typography>
               <ReactMarkdown
-                style={{ marginTop: "1rem" }}
+                style={{ marginTop: "1rem", maxWidth: "10px" }}
                 disallowedElements={[
                   "h1",
                   "h2",
