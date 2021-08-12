@@ -34,7 +34,6 @@ function Main() {
 
   useEffect(() => {
     axios.get("/get/posts").then((data) => {
-      console.log(data.data);
       setPosts(data.data);
     });
     // console.log("Jwt key:", process.env);
@@ -50,14 +49,11 @@ function Main() {
     }
   }, []);
 
-  //const userData = JSON.parse(Cookies.get("userInfo"))
-
   return (
-    <div>
+    <Box>
       <Navbar />
-      <h1>React cookies</h1>
 
-      <Box>
+      <Box style={{ marginTop: "1rem" }}>
         {posts.map((post, i) => {
           return (
             <PostCard
@@ -69,7 +65,7 @@ function Main() {
           );
         })}
       </Box>
-    </div>
+    </Box>
   );
 }
 

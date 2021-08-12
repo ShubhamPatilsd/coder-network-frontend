@@ -163,16 +163,29 @@ function Profile(props) {
             </Box>
           </Box>
         </Box>
-        {userPosts.map((post, i) => {
-          return (
-            <PostCard
-              username={post.username}
-              poster_id={post.poster_id}
-              body={post.body}
-              date={post.date}
-            />
-          );
-        })}
+        <Box
+          style={{
+            marginTop: "1rem",
+          }}
+        >
+          <Box style={{ marginBottom: "1rem" }}>
+            <ThemeProvider theme={theme}>
+              <Typography variant="h4">Posts</Typography>
+            </ThemeProvider>
+          </Box>
+          <Box>
+            {userPosts.map((post, i) => {
+              return (
+                <PostCard
+                  username={post.username}
+                  poster_id={post.poster_id}
+                  body={post.body}
+                  date={post.date}
+                />
+              );
+            })}
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

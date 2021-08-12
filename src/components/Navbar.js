@@ -35,10 +35,18 @@ function Navbar() {
         borderBottom: "1px solid lightgrey",
         paddingTop: "15px",
         paddingBottom: "15px",
+        overflowX: "auto",
       }}
     >
-      <div style={{ display: "flex" }}>
-        <div style={{ display: "flex" }}>
+      <Box
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexBasis: "500px",
+        }}
+      >
+        <Box style={{ display: "flex", flexShrink: 0 }}>
           <Link
             href="/"
             style={{ marginRight: "1rem", display: "flex" }}
@@ -55,8 +63,13 @@ function Navbar() {
             <PostAddIcon style={{ marginRight: "0.2rem" }} />
             <Typography>Post</Typography>
           </Link>
-        </div>
-        <div style={{ display: "flex", justifyContent: "end", width: "100%" }}>
+        </Box>
+        <Box
+          style={{
+            display: "flex",
+            flexShrink: 0,
+          }}
+        >
           {userData ? (
             <>
               <Link href={`/profile/${userData.username}`}>
@@ -79,14 +92,14 @@ function Navbar() {
               </Button>
             </>
           ) : (
-            <div>
+            <Box>
               <Button href="/login" variant="contained">
                 Sign In
               </Button>
-            </div>
+            </Box>
           )}
-        </div>
-      </div>
+        </Box>
+      </Box>
     </Box>
   );
 }
