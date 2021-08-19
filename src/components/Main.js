@@ -61,6 +61,8 @@ function Main() {
               poster_id={post.poster_id}
               body={post.body}
               date={post.date}
+              initialVotes={post.upvotes}
+              id={post._id}
             />
           );
         })}

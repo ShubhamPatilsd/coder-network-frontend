@@ -118,25 +118,27 @@ function Post() {
               justifyContent: "center",
             }}
           >
-            <Typography>
-              <ReactMarkdown
-                style={{ marginTop: "1rem", maxWidth: "10px" }}
-                disallowedElements={[
-                  "h1",
-                  "h2",
-                  "h3",
-                  "h4",
-                  "h5",
-                  "h6",
-                  "img",
-                  "video",
-                ]}
-                unwrapDisallowed
-                components={components}
-              >
-                {postCharacters}
-              </ReactMarkdown>
-            </Typography>
+            <Box style={{ maxWidth: "350px", overflow: "auto" }}>
+              <Typography>
+                <ReactMarkdown
+                  style={{ marginTop: "1rem" }}
+                  disallowedElements={[
+                    "h1",
+                    "h2",
+                    "h3",
+                    "h4",
+                    "h5",
+                    "h6",
+                    "img",
+                    "video",
+                  ]}
+                  unwrapDisallowed
+                  components={components}
+                >
+                  {postCharacters}
+                </ReactMarkdown>
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </>

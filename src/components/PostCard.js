@@ -1,15 +1,30 @@
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Typography, Box, Avatar, Link, IconButton } from "@material-ui/core";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import Cookies from "js-cookie";
+import axios from "axios";
+import jwt from "jsonwebtoken";
 
 function PostCard(propped) {
   const [votes, setVotes] = useState(
-    propped.initialVotes ? propped.initialVotes : 0
+    propped.initialVotes ? propped.initialVotes : []
   );
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    if (Cookies.get("userInfo")) {
+      setUserData(
+        jwt.verify(
+          JSON.parse(Cookies.get("userInfo")).data,
+          process.env.REACT_APP_JWT_KEY
+        ).data
+      );
+    }
+  }, []);
 
   const components = {
     code({ node, inline, className, children, ...props }) {
@@ -43,15 +58,38 @@ function PostCard(propped) {
     >
       <Box style={{ display: "flex", alignItems: "center" }}>
         <Box style={{ marginRight: "0.5rem" }}>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              if (!Cookies.get("userInfo")) {
+                window.location.href = "/login";
+              }
+              axios
+                .post("/add/upvote", {
+                  headers: {
+                    post_id: propped.id,
+                    data: JSON.parse(Cookies.get("userInfo")),
+                  },
+                })
+                .then((res) => {
+                  setVotes(res.data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+            disabled={votes.includes(userData.jwt_id)}
+          >
             <ArrowUpwardIcon />
           </IconButton>
-          <Typography style={{ textAlign: "center" }}>{votes}</Typography>
+          <Typography style={{ textAlign: "center" }}>
+            {votes.length}
+          </Typography>
           <IconButton>
             <ArrowDownwardIcon />
           </IconButton>
         </Box>
-        <Box>
+
+        <Box style={{ overflow: "auto" }}>
           <Box
             style={{
               display: "flex",
@@ -76,16 +114,20 @@ function PostCard(propped) {
             </Link>
             <Typography>Posted by {propped.username}</Typography>
           </Box>
-          <Typography>
-            <ReactMarkdown
-              style={{ marginTop: "1rem" }}
-              disallowedElements={["h1", "h2", "h3", "h4", "h5", "h6"]}
-              unwrapDisallowed
-              components={components}
-            >
-              {propped.body}
-            </ReactMarkdown>
-          </Typography>
+          <Box>
+            <Typography>
+              <Box style={{ overflow: "auto" }}>
+                <ReactMarkdown
+                  style={{ marginTop: "1rem" }}
+                  disallowedElements={["h1", "h2", "h3", "h4", "h5", "h6"]}
+                  unwrapDisallowed
+                  components={components}
+                >
+                  {propped.body}
+                </ReactMarkdown>
+              </Box>
+            </Typography>
+          </Box>
           <Typography variant="overline">
             Posted on {new Date(propped.date).toLocaleDateString()} at{" "}
             {new Date(propped.date).toLocaleTimeString()}
