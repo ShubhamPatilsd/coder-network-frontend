@@ -8,10 +8,15 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import Cookies from "js-cookie";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import nFormatter from "../service/number_format";
 
 function PostCard(propped) {
-  const [votes, setVotes] = useState(
+  const [upvotes, setUpvotes] = useState(
     propped.initialVotes ? propped.initialVotes : []
+  );
+
+  const [downvotes, setDownVotes] = useState(
+    propped.initialDownVotes ? propped.initialDownVotes : []
   );
   const [userData, setUserData] = useState({});
 
@@ -71,20 +76,42 @@ function PostCard(propped) {
                   },
                 })
                 .then((res) => {
-                  setVotes(res.data);
+                  setUpvotes(res.data[0]);
+                  setDownVotes(res.data[1]);
                 })
                 .catch((err) => {
                   console.log(err);
                 });
             }}
-            disabled={votes.includes(userData.jwt_id)}
+            disabled={upvotes.includes(userData.jwt_id)}
           >
             <ArrowUpwardIcon />
           </IconButton>
           <Typography style={{ textAlign: "center" }}>
-            {votes.length}
+            {nFormatter(upvotes.length - downvotes.length, 1)}
           </Typography>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              if (!Cookies.get("userInfo")) {
+                window.location.href = "/login";
+              }
+              axios
+                .post("/add/downvote", {
+                  headers: {
+                    post_id: propped.id,
+                    data: JSON.parse(Cookies.get("userInfo")),
+                  },
+                })
+                .then((res) => {
+                  setUpvotes(res.data[0]);
+                  setDownVotes(res.data[1]);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+            disabled={downvotes.includes(userData.jwt_id)}
+          >
             <ArrowDownwardIcon />
           </IconButton>
         </Box>
@@ -112,7 +139,9 @@ function PostCard(propped) {
                 height="auto"
               />
             </Link>
-            <Typography>Posted by {propped.username}</Typography>
+            <Link href={`/profile/${propped.username}`}>
+              <Typography>Posted by {propped.username}</Typography>
+            </Link>
           </Box>
           <Box>
             <Typography>

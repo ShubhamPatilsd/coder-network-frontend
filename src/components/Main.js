@@ -34,6 +34,8 @@ function Main() {
 
   useEffect(() => {
     axios.get("/get/posts").then((data) => {
+      let ordered_post;
+      //add sorting algorithm here
       setPosts(data.data);
     });
     // console.log("Jwt key:", process.env);
@@ -62,6 +64,7 @@ function Main() {
               body={post.body}
               date={post.date}
               initialVotes={post.upvotes}
+              initialDownVotes={post.downvotes}
               id={post._id}
             />
           );
