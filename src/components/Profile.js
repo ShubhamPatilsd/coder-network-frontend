@@ -181,6 +181,9 @@ function Profile(props) {
                   poster_id={post.poster_id}
                   body={post.body}
                   date={post.date}
+                  initialVotes={post.upvotes}
+                  initialDownVotes={post.downvotes}
+                  id={post._id}
                 />
               );
             })}

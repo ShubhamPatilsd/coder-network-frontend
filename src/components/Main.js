@@ -38,7 +38,7 @@ function Main() {
       //add sorting algorithm here
       setPosts(data.data);
     });
-    // console.log("Jwt key:", process.env);
+
     if (Cookies.get("userInfo")) {
       setUserData(
         jwt.verify(
