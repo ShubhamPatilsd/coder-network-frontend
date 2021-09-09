@@ -33,11 +33,24 @@ function Main() {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
-    axios.get("/get/posts").then((data) => {
-      let ordered_post;
-      //add sorting algorithm here
-      setPosts(data.data);
-    });
+    axios
+      .get(
+        Cookies.get("userInfo")
+          ? `/feed/${
+              jwt.verify(
+                JSON.parse(Cookies.get("userInfo")).data,
+                process.env.REACT_APP_JWT_KEY
+              ).data.username
+            }/posts`
+          : `/get/posts`
+      )
+      .then((data) => {
+        //add sorting algorithm here
+
+        console.log(data.data ? data.data.reverse() : []);
+
+        setPosts(data.data ? data.data.reverse() : []);
+      });
 
     if (Cookies.get("userInfo")) {
       setUserData(
@@ -56,19 +69,30 @@ function Main() {
       <Navbar />
 
       <Box style={{ marginTop: "1rem" }}>
-        {posts.map((post, i) => {
-          return (
-            <PostCard
-              username={post.username}
-              poster_id={post.poster_id}
-              body={post.body}
-              date={post.date}
-              initialVotes={post.upvotes}
-              initialDownVotes={post.downvotes}
-              id={post._id}
-            />
-          );
-        })}
+        {posts !== [] ? (
+          posts.map((post, i) => {
+            return (
+              <PostCard
+                username={post.username}
+                poster_id={post.poster_id}
+                body={post.body}
+                date={post.date}
+                initialVotes={post.upvotes}
+                initialDownVotes={post.downvotes}
+                id={post._id}
+              />
+            );
+          })
+        ) : (
+          <Typography variant="subtitle1" style={{ textAlign: "center" }}>
+            ¯\_(ツ)_/¯ Nothing to see here! <br />{" "}
+            <small>
+              This means that nobody you're following has posted anything. Your
+              following list on GitHub gets transferred here so either they
+              haven't signed up or they haven't posted anything.
+            </small>
+          </Typography>
+        )}
       </Box>
     </Box>
   );

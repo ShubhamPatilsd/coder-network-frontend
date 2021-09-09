@@ -47,8 +47,12 @@ function Login() {
       });
 
       console.log(jwtted_data);
-      axios.post("/new/user", { headers: { id: jwtted_data } });
+
       Cookies.set("userInfo", jwtted_data, { expires: 29 });
+
+      axios.post("http://localhost:5000/new/user", {
+        headers: { id: jwtted_data },
+      });
       setRedirect(true);
     }
   })();

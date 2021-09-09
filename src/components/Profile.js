@@ -70,7 +70,7 @@ function Profile(props) {
       setUsername(response.data.login);
       setBio(response.data.bio);
       setDateCreated(response.data.created_at);
-      setUserPosts(posts.data);
+      setUserPosts(posts.data.reverse());
 
       setLoading(false);
     } catch (err) {
