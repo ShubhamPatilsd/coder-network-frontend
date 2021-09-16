@@ -7,6 +7,7 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { api } from "../service/api";
 import jwt from "jsonwebtoken";
 import nFormatter from "../service/number_format";
 
@@ -68,13 +69,23 @@ function PostCard(propped) {
               if (!Cookies.get("userInfo")) {
                 window.location.href = "/login";
               }
-              axios
-                .post("/add/upvote", {
-                  headers: {
+              // axios
+              //   .post("/add/upvote", {
+              //     headers: {
+              //       post_id: propped.id,
+              //       data: JSON.parse(Cookies.get("userInfo")),
+              //     },
+              //   })
+              api({
+                method: "POST",
+                url: "/add/upvote",
+                headers: {
+                  data: {
                     post_id: propped.id,
                     data: JSON.parse(Cookies.get("userInfo")),
                   },
-                })
+                },
+              })
                 .then((res) => {
                   setUpvotes(res.data[0]);
                   setDownVotes(res.data[1]);
@@ -95,13 +106,23 @@ function PostCard(propped) {
               if (!Cookies.get("userInfo")) {
                 window.location.href = "/login";
               }
-              axios
-                .post("/add/downvote", {
-                  headers: {
+              // axios
+              //   .post("/add/downvote", {
+              //     headers: {
+              //       post_id: propped.id,
+              //       data: JSON.parse(Cookies.get("userInfo")),
+              //     },
+              //   })
+              api({
+                method: "POST",
+                url: "/add/downvote",
+                headers: {
+                  data: {
                     post_id: propped.id,
                     data: JSON.parse(Cookies.get("userInfo")),
                   },
-                })
+                },
+              })
                 .then((res) => {
                   setUpvotes(res.data[0]);
                   setDownVotes(res.data[1]);

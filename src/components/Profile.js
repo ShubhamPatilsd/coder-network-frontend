@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { api } from "../service/api";
 import auth_header from "../config/axios-auth";
 
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
@@ -50,19 +51,26 @@ function Profile(props) {
 
   useEffect(async () => {
     try {
-      const response = await axios.get(
-        `https://api.github.com/users/${user}`,
-        auth_header
-      );
-      const exists = await axios.post(`/get/user`, {
-        headers: { id: response.data.id },
+      //await axios.get(`https://api.github.com/users/${user}`, auth_header);
+      const response = await api({
+        method: "GET",
+        url: `https://api.github.com/users/${user}`,
+        auth_header,
+      });
+      const exists = await api({
+        method: "POST",
+        url: "/get/user",
+        headers: { data: { id: response.data.id } },
       });
       console.log(exists);
       if (exists === {}) {
         throw new Error();
       }
 
-      const posts = await axios.get(`/user/${response.data.login}/posts`);
+      const posts = await api({
+        method: "GET",
+        url: `/user/${response.data.login}/posts`,
+      });
 
       setUserID(response.data.id);
       setFollowers(response.data.followers);

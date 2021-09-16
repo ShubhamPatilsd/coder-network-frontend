@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import axios from "axios";
+
+import { api } from "../service/api";
 import { Typography, Box, Avatar, Link } from "@material-ui/core";
 import Navbar from "./Navbar";
 import ReactMarkdown from "react-markdown";
@@ -33,24 +34,35 @@ function Main() {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
-    axios
-      .get(
-        Cookies.get("userInfo")
-          ? `/feed/${
-              jwt.verify(
-                JSON.parse(Cookies.get("userInfo")).data,
-                process.env.REACT_APP_JWT_KEY
-              ).data.username
-            }/posts`
-          : `/get/posts`
-      )
-      .then((data) => {
-        //add sorting algorithm here
+    // axios
+    //   .get(
+    //     Cookies.get("userInfo")
+    //       ? `/feed/${
+    //           jwt.verify(
+    //             JSON.parse(Cookies.get("userInfo")).data,
+    //             process.env.REACT_APP_JWT_KEY
+    //           ).data.username
+    //         }/posts`
+    //       : `/get/posts`
+    //   )
 
-        console.log(data.data ? data.data.reverse() : []);
+    api({
+      method: "GET",
+      url: Cookies.get("userInfo")
+        ? `/feed/${
+            jwt.verify(
+              JSON.parse(Cookies.get("userInfo")).data,
+              process.env.REACT_APP_JWT_KEY
+            ).data.username
+          }/posts`
+        : `/get/posts`,
+    }).then((data) => {
+      //add sorting algorithm here
 
-        setPosts(data.data ? data.data.reverse() : []);
-      });
+      console.log(data.data ? data.data.reverse() : []);
+
+      setPosts(data.data ? data.data.reverse() : []);
+    });
 
     if (Cookies.get("userInfo")) {
       setUserData(

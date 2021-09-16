@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { api } from "../service/api";
 import { Redirect } from "react-router-dom";
 
 import Button from "@material-ui/core/Button";
@@ -34,8 +35,11 @@ function Login() {
 
   (async () => {
     if (redirectData && redirectData.user) {
-      const jwtted_data = await axios.post("/jwt_auth", {
-        headers: {
+      console.log(process.env.REACT_APP_API_URL);
+      const jwtted_data = await api({
+        method: "POST",
+        url: "/jwt_auth",
+        data: {
           data: {
             jwt_id: redirectData.additionalUserInfo.profile.id,
             pfp:
@@ -49,10 +53,16 @@ function Login() {
       console.log(jwtted_data);
 
       Cookies.set("userInfo", jwtted_data, { expires: 29 });
-
-      axios.post("http://localhost:5000/new/user", {
-        headers: { id: jwtted_data },
+      console.log("jwtted_data", jwtted_data);
+      api({
+        method: "POST",
+        url: "/new/user",
+        headers: { jwt_id: jwtted_data.data },
       });
+
+      // axios.post("/new/user", {
+      //   headers: { id: jwtted_data },
+      // });
       setRedirect(true);
     }
   })();

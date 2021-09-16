@@ -1,5 +1,6 @@
 import { Typography, Button, Box, TextField } from "@material-ui/core";
 import axios from "axios";
+import { api } from "../service/api";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { Redirect } from "react-router-dom";
@@ -61,12 +62,22 @@ function Post() {
       if (postCharacters.length > 500) {
         return;
       } else {
-        axios.post("/new/post", {
+        api({
+          method: "POST",
+          url: "/new/post",
           headers: {
-            data: JSON.parse(Cookies.get("userInfo")).data,
-            body: postCharacters,
+            data: {
+              data: JSON.parse(Cookies.get("userInfo")).data,
+              body: postCharacters,
+            },
           },
         });
+        // axios.post("/new/post", {
+        //   headers: {
+        //     data: JSON.parse(Cookies.get("userInfo")).data,
+        //     body: postCharacters,
+        //   },
+        // });
       }
       window.location.href = "/";
     }
