@@ -79,7 +79,7 @@ function PostCard(propped) {
               api({
                 method: "POST",
                 url: "/add/upvote",
-                headers: {
+                data: {
                   data: {
                     post_id: propped.id,
                     data: JSON.parse(Cookies.get("userInfo")),
@@ -116,7 +116,7 @@ function PostCard(propped) {
               api({
                 method: "POST",
                 url: "/add/downvote",
-                headers: {
+                data: {
                   data: {
                     post_id: propped.id,
                     data: JSON.parse(Cookies.get("userInfo")),

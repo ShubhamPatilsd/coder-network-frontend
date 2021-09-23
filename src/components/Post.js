@@ -57,21 +57,24 @@ function Post() {
   } else {
     const userData = JSON.parse(Cookies.get("userInfo"));
 
-    function postData(event) {
+    async function postData(event) {
       event.preventDefault();
       if (postCharacters.length > 500) {
         return;
       } else {
-        api({
+        await api({
           method: "POST",
           url: "/new/post",
-          headers: {
-            data: {
-              data: JSON.parse(Cookies.get("userInfo")).data,
-              body: postCharacters,
-            },
+
+          data: {
+            data: userData.data,
+            body: postCharacters,
           },
-        });
+        })
+          .then((res) => {
+            window.location.href = "/";
+          })
+          .catch((err) => {});
         // axios.post("/new/post", {
         //   headers: {
         //     data: JSON.parse(Cookies.get("userInfo")).data,
@@ -79,7 +82,7 @@ function Post() {
         //   },
         // });
       }
-      window.location.href = "/";
+      //
     }
 
     return (

@@ -51,12 +51,11 @@ function Profile(props) {
 
   useEffect(async () => {
     try {
-      //await axios.get(`https://api.github.com/users/${user}`, auth_header);
-      const response = await api({
-        method: "GET",
-        url: `https://api.github.com/users/${user}`,
-        auth_header,
-      });
+      const response = await axios.get(
+        `https://api.github.com/users/${user}`,
+        auth_header
+      );
+
       const exists = await api({
         method: "POST",
         url: "/get/user",

@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { api } from "../service/api";
 import { Typography, Box, Avatar, Link } from "@material-ui/core";
 import Navbar from "./Navbar";
-import ReactMarkdown from "react-markdown";
+import { Tab, Tabs } from "@material-ui/core/";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import jwt from "jsonwebtoken";
@@ -32,23 +32,20 @@ function Main() {
 
   const [posts, setPosts] = useState([]);
   const [userData, setUserData] = useState({});
+  const [userFeed, setUserFeed] = useState(
+    Cookies.get("userInfo") &&
+      jwt.verify(
+        JSON.parse(Cookies.get("userInfo")).data,
+        process.env.REACT_APP_JWT_KEY
+      )
+      ? "feed"
+      : "trending"
+  );
 
-  useEffect(() => {
-    // axios
-    //   .get(
-    //     Cookies.get("userInfo")
-    //       ? `/feed/${
-    //           jwt.verify(
-    //             JSON.parse(Cookies.get("userInfo")).data,
-    //             process.env.REACT_APP_JWT_KEY
-    //           ).data.username
-    //         }/posts`
-    //       : `/get/posts`
-    //   )
-
+  const getFeed = (personalized) => {
     api({
       method: "GET",
-      url: Cookies.get("userInfo")
+      url: personalized
         ? `/feed/${
             jwt.verify(
               JSON.parse(Cookies.get("userInfo")).data,
@@ -59,10 +56,29 @@ function Main() {
     }).then((data) => {
       //add sorting algorithm here
 
-      console.log(data.data ? data.data.reverse() : []);
-
       setPosts(data.data ? data.data.reverse() : []);
     });
+  };
+
+  useEffect(() => {
+    console.log(
+      Cookies.get("userInfo") &&
+        jwt.verify(
+          JSON.parse(Cookies.get("userInfo")).data,
+          process.env.REACT_APP_JWT_KEY
+        )
+        ? true
+        : false
+    );
+    getFeed(
+      Cookies.get("userInfo") &&
+        jwt.verify(
+          JSON.parse(Cookies.get("userInfo")).data,
+          process.env.REACT_APP_JWT_KEY
+        )
+        ? true
+        : false
+    );
 
     if (Cookies.get("userInfo")) {
       setUserData(
@@ -79,7 +95,28 @@ function Main() {
   return (
     <Box>
       <Navbar />
-
+      <Box
+        style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}
+      >
+        <Tabs value={userFeed}>
+          <Tab
+            value="trending"
+            label="Trending"
+            onClick={() => {
+              setUserFeed("trending");
+              getFeed(false);
+            }}
+          />
+          <Tab
+            value="feed"
+            label="My Feed"
+            onClick={() => {
+              setUserFeed("feed");
+              getFeed(true);
+            }}
+          />
+        </Tabs>
+      </Box>
       <Box style={{ marginTop: "1rem" }}>
         {posts !== [] ? (
           posts.map((post, i) => {

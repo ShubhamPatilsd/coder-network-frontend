@@ -46,7 +46,13 @@ function Navbar() {
           flexBasis: "500px",
         }}
       >
-        <Box style={{ display: "flex", flexShrink: 0 }}>
+        <Box style={{ display: "flex", flexShrink: 0, alignItems: "center" }}>
+          <Typography
+            variant="h5"
+            style={{ marginRight: "1rem", userSelect: "none" }}
+          >
+            CoderNetwork
+          </Typography>
           <Link
             href="/"
             style={{ marginRight: "1rem", display: "flex" }}
