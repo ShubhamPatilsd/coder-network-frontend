@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Main from "./components/Main";
 import Profile from "./components/Profile";
 import Post from "./components/Post";
+import Personalized from "./components/Personalized";
 //import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -22,6 +23,11 @@ ReactDOM.render(
       <Route path="/" exact>
         <Main />
       </Route>
+
+      <Route path="/feed" exact>
+        <Personalized />
+      </Route>
+
       <Route path="/post" exact>
         <Post />
       </Route>

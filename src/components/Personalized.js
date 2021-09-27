@@ -10,7 +10,7 @@ import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import jwt from "jsonwebtoken";
 import PostCard from "./PostCard";
 
-function Main() {
+function Personalized() {
   const components = {
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || "");
@@ -32,7 +32,7 @@ function Main() {
 
   const [posts, setPosts] = useState([]);
   const [userData, setUserData] = useState({});
-  const [userFeed, setUserFeed] = useState("trending");
+  const [userFeed, setUserFeed] = useState("feed");
 
   const getFeed = (personalized) => {
     api({
@@ -54,7 +54,24 @@ function Main() {
   };
 
   useEffect(() => {
-    getFeed(false);
+    try {
+      jwt.verify(
+        JSON.parse(Cookies.get("userInfo")).data,
+        process.env.REACT_APP_JWT_KEY
+      );
+    } catch (err) {
+      window.location.href = "/login";
+    }
+
+    getFeed(
+      Cookies.get("userInfo") &&
+        jwt.verify(
+          JSON.parse(Cookies.get("userInfo")).data,
+          process.env.REACT_APP_JWT_KEY
+        )
+        ? true
+        : false
+    );
 
     if (Cookies.get("userInfo")) {
       setUserData(
@@ -79,15 +96,24 @@ function Main() {
             value="trending"
             label="Trending"
             onClick={() => {
-              getFeed(false);
-              setUserFeed("trending");
+              window.location.href = "/";
             }}
           />
           <Tab
             value="feed"
             label="My Feed"
             onClick={() => {
-              window.location.href = "/feed";
+              try {
+                const wontBeUsed = jwt.verify(
+                  JSON.parse(Cookies.get("userInfo")).data,
+                  process.env.REACT_APP_JWT_KEY
+                ).data.username;
+              } catch (err) {
+                window.location.href = "/login";
+              }
+
+              getFeed(true);
+              setUserFeed("feed");
             }}
           />
         </Tabs>
@@ -124,4 +150,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default Personalized;
