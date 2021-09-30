@@ -49,7 +49,6 @@ function Main() {
       //add sorting algorithm here
 
       setPosts(data.data ? data.data.reverse() : []);
-      console.log(posts);
     });
   };
 

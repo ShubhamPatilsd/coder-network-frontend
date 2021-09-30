@@ -25,7 +25,6 @@ function Login() {
       .auth()
       .getRedirectResult()
       .then((result) => {
-        console.log(result);
         setRedirectData(result);
       })
       .catch((err) => {
@@ -35,7 +34,6 @@ function Login() {
 
   (async () => {
     if (redirectData && redirectData.user) {
-      console.log(process.env.REACT_APP_API_URL);
       const jwtted_data = await api({
         method: "POST",
         url: "/jwt_auth",
@@ -50,10 +48,8 @@ function Login() {
         },
       });
 
-      console.log(jwtted_data);
-
       Cookies.set("userInfo", jwtted_data, { expires: 29 });
-      console.log("jwtted_data", jwtted_data);
+
       api({
         method: "POST",
         url: "/new/user",

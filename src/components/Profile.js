@@ -61,7 +61,7 @@ function Profile(props) {
         url: "/get/user",
         headers: { data: { id: response.data.id } },
       });
-      console.log(exists);
+
       if (exists === {}) {
         throw new Error();
       }
