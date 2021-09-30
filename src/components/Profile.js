@@ -59,8 +59,10 @@ function Profile(props) {
       const exists = await api({
         method: "POST",
         url: "/get/user",
-        headers: { data: { id: response.data.id } },
+        data: { id: response.data.id },
       });
+
+      console.log(exists);
 
       if (exists === {}) {
         throw new Error();
