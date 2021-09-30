@@ -1,5 +1,5 @@
-import { Typography, Button, Box, TextField } from "@material-ui/core";
-import axios from "axios";
+import { Typography, Button, Box, TextField, Link } from "@material-ui/core";
+
 import { api } from "../service/api";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
@@ -75,12 +75,6 @@ function Post() {
             window.location.href = "/";
           })
           .catch((err) => {});
-        // axios.post("/new/post", {
-        //   headers: {
-        //     data: JSON.parse(Cookies.get("userInfo")).data,
-        //     body: postCharacters,
-        //   },
-        // });
       }
       //
     }
@@ -91,9 +85,20 @@ function Post() {
         <Box style={{ marginTop: "1rem" }}>
           <Box style={{ display: "flex", justifyContent: "center" }}>
             <Box>
-              <Typography variant="h4" style={{ marginBottom: "1rem" }}>
-                Make a Post
-              </Typography>
+              <Box style={{ textAlign: "center" }}>
+                <Typography variant="h4" style={{ marginBottom: "1rem" }}>
+                  Make a Post
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  style={{ marginBottom: "1rem" }}
+                >
+                  Tip: format this text with{" "}
+                  <Link href="https://www.markdownguide.org/cheat-sheet">
+                    Markdown
+                  </Link>
+                </Typography>
+              </Box>
               <TextField
                 error={errorBool}
                 style={{ whiteSpace: "pre-wrap" }}
