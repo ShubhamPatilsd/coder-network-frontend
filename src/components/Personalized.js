@@ -118,7 +118,7 @@ function Personalized() {
         </Tabs>
       </Box>
       <Box style={{ marginTop: "1rem" }}>
-        {posts !== [] ? (
+        {posts.length !== 0 ? (
           posts.map((post, i) => {
             return (
               <div key={i}>

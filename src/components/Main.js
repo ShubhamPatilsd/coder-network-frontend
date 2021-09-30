@@ -92,7 +92,7 @@ function Main() {
         </Tabs>
       </Box>
       <Box style={{ marginTop: "1rem" }}>
-        {posts !== [] ? (
+        {posts.length !== 0 ? (
           posts.map((post, i) => {
             return (
               <div key={i}>
@@ -112,9 +112,10 @@ function Main() {
           <Typography variant="subtitle1" style={{ textAlign: "center" }}>
             ¯\_(ツ)_/¯ Nothing to see here! <br />{" "}
             <small>
-              This means that nobody you're following has posted anything. Your
-              following list on GitHub gets transferred here so either they
-              haven't signed up or they haven't posted anything.
+              This means that nobody has posted anything on the CoderNetwork
+              (Very sad). You can post by clicking the "Post" button in the
+              navigation bar. (Hint: it's next to the home button [and the home
+              button is next to the text of the logo])
             </small>
           </Typography>
         )}
