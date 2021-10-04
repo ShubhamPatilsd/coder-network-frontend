@@ -1,4 +1,10 @@
 # coder-network-frontend
+
+<div align="center"><img width="150" height="auto" src="https://github.githubassets.com/images/modules/logos_page/Octocat.png"/></div>
+<p align="center">Supports GitHub authentication!</p>
+
+
+<br/><br/>
 The frontend (React) for a social media platform for programmers
 
 Backend can be found at: https://github.com/ShubhamPatilsd/coder-network-backend
